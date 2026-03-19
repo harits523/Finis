@@ -1,217 +1,227 @@
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-   <title>Inwepo Fireworks</title>
-   <style>* {
-   margin: 0;
-   padding: 0;
-   }
+<meta charset="UTF-8">
+<title>Untuk Hafizah Arasya ❤️</title>
 
-   body {
-   background-color: black;
-   }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+}
 
-   h1 {
-   margin-top: 5%;
-   font-family: 'Segoe UI';
-   font-size: 60px;
-   text-align: center;
-   color: white;
-   }
-   </style>
+body {
+    background: black;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Judul */
+h1 {
+    position: absolute;
+    top: 15%;
+    width: 100%;
+    text-align: center;
+    font-size: 50px;
+    background: linear-gradient(to right, pink, violet);
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: fadeIn 3s ease-in-out;
+}
+
+/* Teks romantis */
+#text {
+    position: absolute;
+    bottom: 80px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    padding: 0 20px;
+}
+
+/* Animasi fade */
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* Love jatuh */
+.heart {
+    position: absolute;
+    color: pink;
+    font-size: 20px;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    from {
+        transform: translateY(-10%);
+    }
+    to {
+        transform: translateY(110vh);
+    }
+}
+</style>
 </head>
+
 <body>
-        <h1>Selamat Ulang Tahun Hafizah Arasya</h2>
-   <script>var rnd = Math.random, flr = Math.floor;
-   let canvas = document.createElement('canvas');
 
-   document.getElementsByTagName('body')[0].appendChild(canvas);
-   canvas.style.position = 'absolute';
-   canvas.style.width = '100%';
-   canvas.style.height = '100%';
+<h1>Selamat Ulang Tahun Hafizah Arasya ❤️</h1>
 
-   canvas.width = canvas.clientWidth;
-   canvas.height = canvas.clientHeight;
+<div id="text"></div>
 
-   let ctx = canvas.getContext('2d');
+<!-- Musik -->
+<iframe id="musicFrame" width="0" height="0"
+src="https://www.youtube.com/embed/2Vv-BfVoq4g?autoplay=1&loop=1&playlist=2Vv-BfVoq4g"
+frameborder="0"
+allow="autoplay">
+</iframe>
 
-   function rndNum(num) {
-   return rnd() * num + 1;
-   }
+<canvas id="canvas"></canvas>
 
-   function vector(x, y) {
-   this.x = x;
-   this.y = y;
+<script>
+// trigger biar musik jalan di HP
+document.body.addEventListener("click", function() {
+    let iframe = document.getElementById("musicFrame");
+    iframe.src = iframe.src;
+});
+</script>
 
-   this.add = function(vec2) {
-   this.x = this.x + vec2.x;
-   this.y = this.y + vec2.y;
-   }
-   }
+<script>
+// ================= TEXT TYPING =================
+const message = `Untuk Hafizah Arasya,
 
-   function particle(pos, vel) {
-   this.pos = new vector(pos.x, pos.y);
-   this.vel = vel;
-   this.finish = false;
-   this.start = 0;
+Di hari istimewamu, aku cuma ingin kamu tahu…
+bahwa kamu adalah alasan kenapa dunia terasa lebih indah.
 
-   this.update = function(time) {
-   let timeSpan = time - this.start;
+Senyummu sederhana, tapi mampu mengubah hariku.
+Hadirmu biasa, tapi rasanya luar biasa.
 
-   if (timeSpan > 500) {
-   this.finish = true;
-   }
+Selamat ulang tahun ya 
+Semoga semua hal baik selalu menemukan jalannya ke kamu.
+Dan semoga… aku tetap jadi bagian dari cerita indahmu.`;
 
-   if (!this.finish) {
-   this.pos.add(this.vel);
-   this.vel.y = this.vel.y + gravity;
-   }
-   };
+let i = 0;
+function typing() {
+    if (i < message.length) {
+        document.getElementById("text").innerHTML += message.charAt(i);
+        i++;
+        setTimeout(typing, 40);
+    }
+}
+typing();
 
-   this.draw = function() {
-   if (!this.finish) {
-   drawDot(this.pos.x, this.pos.y, 1);
-   }
-   }
+// ================= HEART EFFECT =================
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+    document.body.appendChild(heart);
 
-   }
+    setTimeout(() => {
+        heart.remove();
+    }, 5000);
+}
+setInterval(createHeart, 300);
 
-   function firework(x, y) {
-   this.pos = new vector(x, y);
-   this.vel = new vector(0, -rndNum(10) - 3);
-   this.color = 'hsl(' + rndNum(360) + ', 100%, 50%)'
-   this.size = 4;
-   this.finish = false;
-   this.start = 0;
-   let exParticles = [], exPLen = 100;
+// ================= FIREWORK =================
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 
-   let rootShow = true;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-   this.update = function(time) {
-   if (this.finish) {
-   return;
-   }
+let fireworks = [];
+let gravity = 0.2;
 
-   rootShow = this.vel.y < 0;
+function random(n) {
+    return Math.random() * n;
+}
 
-   if (rootShow) {
-   this.pos.add(this.vel);
-   this.vel.y = this.vel.y + gravity;
-   } else {
-   if (exParticles.length === 0) {
-   flash = true;
-   for (let i = 0; i < exPLen; i++) {
-   exParticles.push(new particle(this.pos, new vector(-rndNum(10) + 5, -rndNum(10) + 5)));
-   exParticles[exParticles.length - 1].start = time;
-   }
-   }
-   let countFinish = 0;
-   for (let i = 0; i < exPLen; i++) {
-   let p = exParticles[i];
-   p.update(time);
-   if (p.finish) {
-   countFinish++;
-   }
-   }
+class Particle {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.velX = random(6) - 3;
+        this.velY = random(6) - 3;
+        this.life = 100;
+    }
 
-   if (countFinish === exPLen) {
-   this.finish = true;
-   }
+    update() {
+        this.x += this.velX;
+        this.y += this.velY;
+        this.velY += gravity;
+        this.life--;
+    }
 
-   }
-   }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.color;
+        ctx.fill();
+    }
+}
 
-   this.draw = function() {
-   if (this.finish) {
-   return;
-   }
+class Firework {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.particles = [];
+        this.color = `hsl(${random(360)},100%,50%)`;
 
-   ctx.fillStyle = this.color;
-   if (rootShow) {
-   drawDot(this.pos.x, this.pos.y, this.size);
-   } else {
-   for (let i = 0; i < exPLen; i++) {
-   let p = exParticles[i];
-   p.draw();
-   }
-   }
-   }
+        for (let i = 0; i < 80; i++) {
+            this.particles.push(new Particle(x, y, this.color));
+        }
+    }
 
-   }
+    update() {
+        this.particles.forEach(p => p.update());
+    }
 
-   function drawDot(x, y, size) {
-   ctx.beginPath();
+    draw() {
+        this.particles.forEach(p => p.draw());
+    }
+}
 
-   ctx.arc(x, y, size, 0, Math.PI * 2);
-   ctx.fill();
+// klik untuk buat fireworks
+canvas.addEventListener("click", (e) => {
+    fireworks.push(new Firework(e.clientX, e.clientY));
+});
 
-   ctx.closePath();
-   }
+// auto fireworks
+setInterval(() => {
+    fireworks.push(new Firework(random(canvas.width), random(canvas.height / 2)));
+}, 1200);
 
-   var fireworks = [],
-   gravity = 0.2,
-   snapTime = 0,
-   flash = false;
+// animasi
+function animate() {
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-   function init() {
-   let numOfFireworks = 20;
-   for (let i = 0; i < numOfFireworks; i++) {
-   fireworks.push(new firework(rndNum(canvas.width), canvas.height));
-   }
-   }
+    fireworks.forEach((f, i) => {
+        f.update();
+        f.draw();
+        if (f.particles[0].life <= 0) {
+            fireworks.splice(i, 1);
+        }
+    });
 
-   function update(time) {
-   for (let i = 0, len = fireworks.length; i < len; i++) {
-   let p = fireworks[i];
-   p.update(time);
-   }
-   }
+    requestAnimationFrame(animate);
+}
+animate();
 
-   function draw(time) {
-   update(time);
+// resize
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
 
-   ctx.fillStyle = 'rgba(0,0,0,0.3)';
-   if (flash) {
-   flash = false;
-   }
-   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-   ctx.fillStyle = 'white';
-   ctx.font = "30px Segoe UI";
-   let newTime = time - snapTime;
-   snapTime = time;
-
-   ctx.fillStyle = 'blue';
-   for (let i = 0, len = fireworks.length; i < len; i++) {
-   let p = fireworks[i];
-   if (p.finish) {
-   fireworks[i] = new firework(rndNum(canvas.width), canvas.height);
-   p = fireworks[i];
-   p.start = time;
-   }
-   p.draw();
-   }
-
-   window.requestAnimationFrame(draw);
-   }
-
-   window.addEventListener('resize', function() {
-   canvas.width = canvas.clientWidth;
-   canvas.height = canvas.clientHeight;
-   });
-
-   init();
-   draw();
-   </script>
 </body>
 </html>
-
-<html>
-        <head>
-                <body>
-                        <body bgcolor="black"><center><br>
-                        <font face="Abel" size="6px" color="grey"><b></b>
-                        <br><font size="3px">
-                        <font color="white">[ </font><marquee scrollamount="5" width="630" height="20" behavior="alternate">Selamat ulang tahun Dek. Semoga panjang umur, murah rejeki, dan sehat selalu. Ingat selalu pesan kakak! Jaga kehormatan dan wibawa keluarga kita!</marquee><font color="white"> ]</font>
-                        <br><br><font size="3px" face="Ubuntu Condensed">
-                </body>
-        </font>
